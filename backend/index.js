@@ -1,13 +1,18 @@
+const express = require("express");
 const mongoose = require("mongoose");
-const app = require("./app");
+
+const taskRoutes = require("./routes/task.route");
 const config = require("./config/config");
+
+const app = express();
+app.use(express.json());
 
 let server;
 const port = config.port;
 
 // MongoDB connection and server startup
 mongoose
-  .connect(config.mongoose.url, config.mongoose.options)
+  .connect(config.mongoose.url)
   .then(() => {
     console.log("Connected to database", config.mongoose.url);
     server = app.listen(port, () => {
@@ -15,3 +20,5 @@ mongoose
     });
   })
   .catch((err) => console.log(err));
+
+app.use("/tasks", taskRoutes);

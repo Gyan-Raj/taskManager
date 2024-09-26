@@ -22,9 +22,5 @@ module.exports = {
   port: envVars.PORT,
   mongoose: {
     url: envVars.MONGODB_URL,
-    options: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    },
   },
 };
