@@ -1,34 +1,17 @@
-require("dotenv").config();
-
-const cors = require("cors");
-const express = require("express");
 const mongoose = require("mongoose");
+const app = require("./app");
+const config = require("./config/config");
 
-const taskRoutes = require("./routes/task.route");
-
-const app = express();
-
-// Use environment variables
-const PORT = process.env.PORT || 8082;
-const MONGODB_URL = process.env.MONGODB_URL;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Task routes
-app.use("/tasks", taskRoutes);
+let server;
+const port = config.port;
 
 // MongoDB connection and server startup
 mongoose
-  .connect(MONGODB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(config.mongoose.url, config.mongoose.options)
   .then(() => {
-    console.log("Connected to database:", MONGODB_URL);
-    app.listen(PORT, () => {
-      console.log(`Server listening on PORT: ${PORT}`);
+    console.log("Connected to database", config.mongoose.url);
+    server = app.listen(port, () => {
+      console.log(`Server listening on port ${port}`);
     });
   })
-  .catch((err) => console.log("Database connection error:", err));
+  .catch((err) => console.log(err));
